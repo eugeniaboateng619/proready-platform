@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Clock, Target, Package, AlertTriangle, FileText } from "lucide-react";
-import { securityIncidentBrief } from "@/data/projectBrief";
+import { residencyBriefs } from "@/data/projectBrief";
 import {
   Card,
   CardContent,
@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { UploadZone } from "@/components/UploadZone";
 import { VivaVocePanel } from "@/components/VivaVocePanel";
+import { cn } from "@/lib/utils";
 
 /**
  * View B — Candidate / Emerging Talent Workspace.
@@ -22,7 +23,9 @@ import { VivaVocePanel } from "@/components/VivaVocePanel";
  * workspace. Submitting triggers the mocked Viva Voce explainer agent.
  */
 export function CandidateWorkspace() {
-  const brief = securityIncidentBrief;
+  const [briefId, setBriefId] = useState(residencyBriefs[0].id);
+  const brief =
+    residencyBriefs.find((b) => b.id === briefId) ?? residencyBriefs[0];
   const [docs, setDocs] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
@@ -30,12 +33,40 @@ export function CandidateWorkspace() {
     <div className="container space-y-6 px-4 py-8 sm:px-6">
       <div className="space-y-1">
         <h1 className="text-2xl font-semibold tracking-tight">
-          Your active assignment
+          Your active residency
         </h1>
         <p className="text-sm text-muted-foreground">
-          Build a functional evidence profile by shipping real work. Commit
-          incrementally — your timeline is part of the evidence.
+          Build a functional evidence profile by shipping real, high-impact
+          community work. Commit incrementally — your timeline is part of the
+          evidence.
         </p>
+      </div>
+
+      <div
+        role="tablist"
+        aria-label="Residency pathway"
+        className="flex flex-wrap gap-2"
+      >
+        {residencyBriefs.map((b) => (
+          <button
+            key={b.id}
+            role="tab"
+            type="button"
+            aria-selected={b.id === briefId}
+            onClick={() => {
+              setBriefId(b.id);
+              setSubmitted(false);
+            }}
+            className={cn(
+              "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+              b.id === briefId
+                ? "border-primary bg-primary/10 text-primary"
+                : "border-border text-muted-foreground hover:border-primary/50",
+            )}
+          >
+            {b.company}
+          </button>
+        ))}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
@@ -53,9 +84,9 @@ export function CandidateWorkspace() {
               </div>
             </CardHeader>
             <CardContent className="space-y-5">
-              <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4">
-                <div className="mb-1 flex items-center gap-2 text-sm font-semibold text-destructive">
-                  <AlertTriangle className="size-4" /> Security Incident
+              <div className="rounded-lg border border-primary/30 bg-primary/5 p-4">
+                <div className="mb-1 flex items-center gap-2 text-sm font-semibold text-primary">
+                  <AlertTriangle className="size-4" /> Community Residency
                   Scenario
                 </div>
                 <p className="text-sm text-foreground">{brief.scenario}</p>
@@ -106,7 +137,8 @@ export function CandidateWorkspace() {
             <CardHeader>
               <CardTitle className="text-base">Submit your deliverable</CardTitle>
               <CardDescription>
-                Upload your code and configuration files.
+                Upload your PDF resume to unlock trait diagnostics and your ATS
+                keyword optimizer.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">

@@ -12,6 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScoreMeter } from "@/components/ScoreMeter";
+import { ResidencyMatch } from "@/components/ResidencyMatch";
 import { IntegrityTimeline } from "@/components/IntegrityTimeline";
 import { VivaVocePanel } from "@/components/VivaVocePanel";
 import { cn } from "@/lib/utils";
@@ -58,6 +59,8 @@ export function EmployerPortal() {
               </li>
             ))}
           </ul>
+
+          <ResidencyMatch />
         </section>
 
         <section aria-label="Evaluation panel">
@@ -136,27 +139,33 @@ function EvaluationPanel({ candidate }: { candidate: Candidate }) {
               <CardDescription>{candidate.headline}</CardDescription>
             </div>
           </div>
-          <Badge variant="secondary">
-            Capability {candidate.capabilityScore}/100
-          </Badge>
+          <Badge variant="secondary">Well-Architected alignment profile</Badge>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="rounded-lg border bg-card/50 p-4">
+          <div className="mb-3 text-sm font-medium text-foreground">
+            Well-Architected alignment radar
+          </div>
           <ScoreMeter
-            label="Technical Execution"
-            value={candidate.technicalExecutionScore}
-            caption="Correctness & engineering quality"
-          />
-          <ScoreMeter
-            label="Integrity / Authenticity"
-            value={candidate.capabilityScore}
-            caption="Advisory signal — see timeline"
-          />
-          <ScoreMeter
-            label="Viva Voce Comprehension"
-            value={candidate.vivaVoceComprehensionScore}
-            caption="Defense of engineering choices"
+            axes={[
+              {
+                label: "Security Infrastructure Architecture Alignment Index",
+                shortLabel: "Security",
+                value: candidate.technicalExecutionScore,
+              },
+              {
+                label:
+                  "Serverless Resource & Cost-Optimization Alignment Index",
+                shortLabel: "Serverless / Cost",
+                value: candidate.capabilityScore,
+              },
+              {
+                label: "Operational Execution & Continuity Index",
+                shortLabel: "Operations",
+                value: candidate.vivaVoceComprehensionScore,
+              },
+            ]}
           />
         </div>
 
